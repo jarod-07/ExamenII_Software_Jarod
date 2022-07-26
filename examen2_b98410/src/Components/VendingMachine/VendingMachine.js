@@ -1,53 +1,73 @@
-import React from "react";
+import { React, useState } from "react";
 import "./VendingMachine.css";
+import { SodasComp } from "../SodasComp/SodasComp";
+import { SodasTypeInput } from "../SodasTypeInput/SodasTypeInput";
+import { MoneyComp } from "../MoneyComp/MoneyComp";
+import { ChangeSummary } from "../ChangeSummary/ChangeSummary";
+import { VendingMachineReport } from "../VendingMachineReport/VendingMachineReport";
+import { PaymentButton } from "../PaymentButton/PaymentButton";
 
 export const VendingMachine = () => {
+  const [totalCost, setTotalCost] = useState(0);
+  const [moneyEntered, setMoneyEntered] = useState(0);
+  const [change, setChange] = useState(0);
+  const [changeSumary, setChangeSumary] = useState([]);
+  const [pay, setPay] = useState(false);
+  const [updateSodaStock, setUpdateSodaStock] = useState(false);
+  const [reset, setReset] = useState(false);
+  const [coinsStockUpdated, setCoinsStockUpdated] = useState(false);
+  const [outOfService, setOutOfService] = useState(false);
+
   return (
-    <div className="vending-machine">
-      <div className="vending-machine-top">
-        <div className="vending-machine-sodas">
-          <div class="parent">
-            <div class="div1">
-              <img
-                className="vending-machine-sodas-logo"
-                src="https://tentulogo.com/wp-content/uploads/2017/06/cocacola-logo.jpg"
-                alt=""
-              ></img>
-              <label className="text">Cant:12 Cuesta: 500</label>
-            </div>
-            <div class="div2">
-              <img
-                className="vending-machine-sodas-logo"
-                src="https://brandemia.org/contenido/subidas/2011/03/pepsi-a-traves-de-la-historia.jpg"
-                alt=""
-              ></img>
-              <label className="text">Cant:12 Cuesta: 500</label>
-            </div>
-            <div class="div3">
-              <img
-                className="vending-machine-sodas-logo"
-                src="https://turbologo.com/articles/wp-content/uploads/2020/02/Fanta-logo.png"
-                alt=""
-              ></img>
-              <label className="text">Cant:12 Cuesta: 500</label>
-            </div>
-            <div class="div4">
-              <img
-                className="vending-machine-sodas-logo"
-                src="https://brandemia.org/contenido/subidas/2022/05/nueva-identidad-visual-de-sprite-2022.png"
-                alt=""
-              ></img>
-              <label className="text">Cant:12 Cuesta: 500</label>
-            </div>
+    <>
+    <div className="name">Jarod Venegas Alpizar - B98410</div>
+      <div className="vending-machine">
+        <div className="vending-machine-top">
+          <div className="vending-machine-sodas">
+            <SodasComp
+              updateSodaStock={updateSodaStock}
+              setUpdateSodaStock={setUpdateSodaStock}
+            />
+          </div>
+          <div className="vending-machine-panel">
+            <SodasTypeInput
+              setTotalCost={setTotalCost}
+              pay={pay}
+              setPay={setPay}
+              setUpdateSodaStock={setUpdateSodaStock}
+              reset={reset}
+            />
+            <VendingMachineReport data={totalCost} tag={"A Pagar"} />
+            <MoneyComp
+              totalCost={totalCost}
+              setChange={setChange}
+              pay={pay}
+              reset={reset}
+              setReset={setReset}
+              setMoneyEntered={setMoneyEntered}
+              setCoinsStockUpdated={setCoinsStockUpdated}
+              setOutOfService={setOutOfService}
+            />
+            <VendingMachineReport data={change} tag={"Vuelto"} />
+            <PaymentButton
+              change={change}
+              totalCost={totalCost}
+              moneyEntered={moneyEntered}
+              setChangeSumary={setChangeSumary}
+              setPay={setPay}
+              setReset={setReset}
+              coinsStockUpdated={coinsStockUpdated}
+              setCoinsStockUpdated={setCoinsStockUpdated}
+            />
           </div>
         </div>
-        <div className="vending-machine-panel">
-          <button className="choose-btn">Elegir</button>
-          <div className="vending-machine-cost-panel"></div>
-          <button className="pay-btn">Pagar</button>
-        </div>
+        {outOfService ? (
+          <div className="vending-machine-dispenser">Maquina Fuera De Servicio</div>
+        ) : (
+          <div className="vending-machine-dispenser"></div>
+        )}
       </div>
-      <div className="vending-machine-dispenser"></div>
-    </div>
+      <ChangeSummary changeSumary={changeSumary} change={change} />
+    </>
   );
 };
